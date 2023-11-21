@@ -1,11 +1,13 @@
 {
   "name": "twinfield",
-  "version": "1.0.0",
+  "version": "0.0.18",
   "description": "A yet to become powerful and user-friendly Node.js SDK for interacting with the Twinfield accounting software's SOAP and OAuth APIs, enabling seamless integration and data exchange.",
-  "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "/dist/esm/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist/ && npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module CommonJS --outDir dist/cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -14,7 +16,7 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "@types/node": "^20.6.3",
+    "@types/node": "^20.9.3",
     "@types/node-fetch": "^2.6.5",
     "@types/xml2js": "^0.4.12"
   },
