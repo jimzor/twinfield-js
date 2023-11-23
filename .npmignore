@@ -1,0 +1,7 @@
+# Development files
+.git
+.gitignore
+.eslintrc
+.prettierrc
+tsconfig.json
+webpack.config.js
