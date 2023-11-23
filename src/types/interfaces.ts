@@ -198,46 +198,52 @@ export interface IOffice {
 }
 
 export interface IOfficesList {
-    attrkey: { result: string, xmlns: string },
+    attrkey: { result: string; xmlns: string };
     office: {
-        value: string, attrkey: {
-            name: string,
-            shortname: string
-        }
-    }[]
+        value: string;
+        attrkey: {
+            name: string;
+            shortname: string;
+        };
+    }[];
 }
 
 export interface IGeneralLedgerTransactionsArgs {
-    officeCode: string
-    fromDate: string
-    toDate: string
-    fromLedger: string
-    toLedger: string
+    officeCode: string;
+    fromDate: string;
+    toDate: string;
+    fromLedger: string;
+    toLedger: string;
+    /**
+     * Filter the transaction date from a specific date. Following format is permitted: '20231001'. If this value is set, the 'toTransactionDate' is required.
+     * @type {string}
+     */
+    fromTransactionDate?: string;
+    /**
+     * Filter the transaction date to a specific date. Following format is permitted: '20231001'. If this value is set, the 'fromTransactionDate' is required.
+     * @type {string}
+     */
+    toTransactionDate?: string;
 }
 
-
 export interface IGeneralLedgerTransaction {
-    value: string
+    value: string;
     attrkey: {
-        label: string
-        hideforuser: string
-        type: string
-    }
-}[]
+        label: string;
+        hideforuser: string;
+        type: string;
+    };
+}
+[];
 
 export interface IGeneralLedgerTransactions {
     attrkey: {
-        result: number
-        first: number
-        last: number
-        total: number
-        xmlns: string
-    }
-    th?: [
-        { td: IGeneralLedgerTransaction[] }
-    ]
-    tr?: [
-        { td: IGeneralLedgerTransaction[] }
-    ]
-
+        result: number;
+        first: number;
+        last: number;
+        total: number;
+        xmlns: string;
+    };
+    th?: [{ td: IGeneralLedgerTransaction[] }];
+    tr?: [{ td: IGeneralLedgerTransaction[] }];
 }
