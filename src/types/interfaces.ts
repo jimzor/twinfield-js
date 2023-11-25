@@ -247,3 +247,56 @@ export interface IGeneralLedgerTransactions {
     th?: [{ td: IGeneralLedgerTransaction[] }];
     tr?: [{ td: IGeneralLedgerTransaction[] }];
 }
+
+
+export interface IGeneralLedger030Config {
+    office?: boolean;
+    officeName?: boolean;
+    year?: boolean;
+    period?: boolean;
+    code?: boolean;
+    number?: boolean;
+    status?: boolean;
+    date?: boolean;
+    curCode?: boolean;
+    relation?: boolean;
+    relationName?: boolean;
+    inpDate?: boolean;
+    modified?: boolean;
+    username?: boolean;
+    dim1Name?: boolean;
+    dim1Type?: boolean;
+    dim2?: boolean;
+    dim2Name?: boolean;
+    dim2Type?: boolean;
+    dim3?: boolean;
+    dim3Name?: boolean;
+    dim3Type?: boolean;
+    valueSigned?: boolean;
+    baseValueSigned?: boolean;
+    repValueSigned?: boolean;
+    debitCredit?: boolean;
+    vatCode?: boolean;
+    vatBaseValueSigned?: boolean;
+    quantity?: boolean;
+    chequeNumber?: boolean;
+    description?: boolean;
+    invnumber?: boolean;
+    dim1group1?: boolean;
+    dim1Group1Name?: boolean;
+    dim1Group2?: boolean;
+    dim1Group2Name?: boolean;
+    dim1Group3?: boolean;
+    dim1Group3Name?: boolean;
+    dim1Group4?: boolean;
+    dim1Group4Name?: boolean;
+    dim1Group5?: boolean;
+    dim1Group5Name?: boolean;
+    freeText1?: boolean;
+    freeText2?: boolean;
+    freeText3?: boolean;
+    origin?: boolean;
+    type?: boolean;
+    regime?: boolean;
+    reportingStructure?: boolean;
+}
