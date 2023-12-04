@@ -300,3 +300,8 @@ export interface IGeneralLedger030Config {
     regime?: boolean;
     reportingStructure?: boolean;
 }
+
+
+export interface IGeneralLedger060Config extends IGeneralLedger030Config {
+    balanceRegimePrompt?: boolean;
+}
