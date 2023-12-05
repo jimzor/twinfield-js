@@ -93,7 +93,7 @@ export default class OAuth {
             }
 
             this.parent.tokenInfo = response.data
-            return
+            return response.data
         } catch (error) {
             console.error(error)
             throw error
