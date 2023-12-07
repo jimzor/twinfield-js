@@ -208,12 +208,38 @@ export interface IOfficesList {
     }[];
 }
 
+
+export interface IAnnualReportYTDArgs {
+    officeCode?: string;
+    year?: string;
+    period?: string;
+    fromLedger?: string;
+    toLedger?: string;
+    fromDate?: string;
+    toDate?: string;
+}
+
+export interface IAnnualReportYTDConfig {
+    office?: boolean;
+    officeName?: boolean;
+    yearperiod?: boolean;
+    number?: boolean;
+    status?: boolean;
+    dim1?: boolean;
+    dim1Type?: boolean;
+    dim1Name?: boolean;
+    valueSigned?: boolean;
+    baseValueSigned?: boolean;
+    repValueSigned?: boolean;
+    balanceRegimePrompt?: boolean;
+}
+
 export interface IGeneralLedgerTransactionsArgs {
     officeCode: string;
     fromDate: string;
     toDate: string;
-    fromLedger: string;
-    toLedger: string;
+    fromLedger?: string;
+    toLedger?: string;
     /**
      * Filter the transaction date from a specific date. Following format is permitted: '20231001'. If this value is set, the 'toTransactionDate' is required.
      * @type {string}
@@ -236,6 +262,7 @@ export interface IGeneralLedgerTransaction {
 }
 [];
 
+
 export interface IGeneralLedgerTransactions {
     attrkey: {
         result: number;
@@ -248,6 +275,36 @@ export interface IGeneralLedgerTransactions {
     tr?: [{ td: IGeneralLedgerTransaction[] }];
 }
 
+export interface IAnnualReportYTDRow {
+    value: string;
+    attrkey: {
+        field: string;
+        hideforuser: string;
+        type: string;
+    };
+}
+[];
+
+export interface IAnnualReportYTD {
+    attrkey: {
+        result: number;
+        first: number;
+        last: number;
+        total: number;
+        xmlns: string;
+    };
+    th?: [{ td: IAnnualReportYTDRow[] }];
+    tr?: [{ td: IAnnualReportYTDRow[] }];
+}
+
+
+export interface IAnnualReportMultiCurrencyArgs {
+    officeCode: string;
+    fromDate?: string;
+    toDate?: string;
+    fromLedger?: string;
+    toLedger?: string;
+}
 
 export interface IGeneralLedger030Config {
     office?: boolean;
@@ -301,6 +358,11 @@ export interface IGeneralLedger030Config {
     reportingStructure?: boolean;
 }
 
+
+export interface IGeneralLedger000Config extends IGeneralLedger030Config {
+    balanceRegimePrompt?: boolean;
+    shortname?: boolean;
+}
 
 export interface IGeneralLedger060Config extends IGeneralLedger030Config {
     balanceRegimePrompt?: boolean;

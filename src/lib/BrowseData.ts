@@ -1,5 +1,5 @@
 // import axios from "axios";
-import { IGeneralLedger030Config, IGeneralLedger060Config, IGeneralLedgerTransactions, IGeneralLedgerTransactionsArgs } from '../types/interfaces';
+import { IAnnualReportMultiCurrencyArgs, IAnnualReportYTD, IAnnualReportYTDArgs, IAnnualReportYTDConfig, IGeneralLedger000Config, IGeneralLedger030Config, IGeneralLedger060Config, IGeneralLedgerTransactions, IGeneralLedgerTransactionsArgs } from '../types/interfaces';
 import Twinfield from './Twinfield';
 import axios from 'axios';
 
@@ -16,7 +16,7 @@ export default class BrowseData {
         this.parent = parent;
     }
 
-    async generalLedgerTransactions(version: 'v3', args: IGeneralLedgerTransactionsArgs, config?: IGeneralLedger030Config): Promise<IGeneralLedgerTransactions> {
+    async generalLedgersDetailsV3(args: IGeneralLedgerTransactionsArgs, config?: IGeneralLedger030Config): Promise<IGeneralLedgerTransactions> {
         await this.parent.oAuth.validateAccessToken();
 
         let body = `
@@ -582,8 +582,8 @@ export default class BrowseData {
                         <to></to>
                         <finderparam></finderparam>
                     </column>`
-        if (config?.regime)
-            body += `<column id="50">
+        // if (config?.regime)
+        body += `<column id="50">
                         <field>fin.trs.head.regime</field>
                         <label>Regime</label>
                         <visible>true</visible>
@@ -638,10 +638,402 @@ export default class BrowseData {
 
 
 
+    async GeneralLedgerTransactions(args: IGeneralLedgerTransactionsArgs, config?: IGeneralLedger000Config): Promise<any> {
+        await this.parent.oAuth.validateAccessToken();
+
+
+        let body = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:twin="http://www.twinfield.com/">
+        <soapenv:Header>
+            <twin:Header>
+                <twin:AccessToken>${this.parent.accessToken}</twin:AccessToken>
+                <twin:CompanyCode>${args.officeCode}</twin:CompanyCode>
+            </twin:Header>
+        </soapenv:Header>
+        <soapenv:Body>
+            <twin:ProcessXmlDocument>
+                <twin:xmlRequest>
+                <columns code="000">
+                `
+
+        body += `<column id="1">
+                    <field>fin.trs.head.yearperiod</field>
+                    <label>Periode</label>
+                    <visible>true</visible>
+                    <ask>true</ask>
+                    <operator>between</operator>
+                    <from>${args.fromDate}</from>
+                    <to>${args.toDate}</to>
+                    <finderparam></finderparam>
+                </column>`
+
+        if (config?.code)
+            body += `<column id="2">
+                        <field>fin.trs.head.code</field>
+                        <label>Dagboek</label>
+                        <visible>true</visible>
+                        <ask>true</ask>
+                        <operator>equal</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam>hidden=1</finderparam>
+                    </column>`
+
+        if (config?.shortname)
+            body += `<column id="3">
+                        <field>fin.trs.head.shortname</field>
+                        <label>Naam</label>
+                        <visible>true</visible>
+                        <ask>false</ask>
+                        <operator>none</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+        if (config?.number)
+            body += `<column id="4">
+                        <field>fin.trs.head.number</field>
+                        <label>Boekst.nr.</label>
+                        <visible>true</visible>
+                        <ask>true</ask>
+                        <operator>between</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+        if (config?.status)
+            body += `<column id="5">
+                        <field>fin.trs.head.status</field>
+                        <label>Status</label>
+                        <visible>true</visible>
+                        <ask>true</ask>
+                        <operator>equal</operator>
+                        <from>normal</from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column`
+
+        body += `<column id="6">
+                    <field>fin.trs.line.dim1</field>
+                    <label>Grootboek</label>
+                    <visible>true</visible>
+                    <ask>true</ask>
+                    <operator>between</operator>
+                    <from>${args.fromLedger ? args.fromLedger : ''}</from>
+                    <to>${args.toLedger ? args.toLedger : ''}</to>
+                    <finderparam></finderparam>
+                </column>`
+
+        if (config?.dim1Name)
+            body += `<column id="7">
+                        <field>fin.trs.line.dim1name</field>
+                        <label>Naam</label>
+                        <visible>true</visible>
+                        <ask>false</ask>
+                        <operator>none</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+
+        if (config?.curCode)
+            body += `<column id="8">
+                        <field>fin.trs.head.curcode</field>
+                        <label>Valuta</label>
+                        <visible>false</visible>
+                        <ask>false</ask>
+                        <operator>equal</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+
+        if (config?.valueSigned)
+            body += `<column id="9">
+                        <field>fin.trs.line.valuesigned</field>
+                        <label>Bedrag</label>
+                        <visible>false</visible>
+                        <ask>false</ask>
+                        <operator>between</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+
+        if (config?.baseValueSigned)
+            body += `<column id="10">
+                        <field>fin.trs.line.basevaluesigned</field>
+                        <label>Euro</label>
+                        <visible>true</visible>
+                        <ask>true</ask>
+                        <operator>between</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+
+        if (config?.repValueSigned)
+            body += `<column id="11">
+                        <field>fin.trs.line.repvaluesigned</field>
+                        <label></label>
+                        <visible>false</visible>
+                        <ask>false</ask>
+                        <operator>between</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+
+        if (config?.description)
+            body += `<column id="12">
+                        <field>fin.trs.line.description</field>
+                        <label>Omschrijving</label>
+                        <visible>true</visible>
+                        <ask>false</ask>
+                        <operator>none</operator>
+                        <from></from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+        body += `<column id="13">
+                        <field>fin.trs.head.browseregime</field>
+                        <label>Regime</label>
+                        <visible>true</visible>
+                        <ask>true</ask>
+                        <operator>equal</operator>
+                        <from>fiscal</from>
+                        <to></to>
+                        <finderparam></finderparam>
+                    </column>`
+
+        body += `   </columns>
+                    </twin:xmlRequest>
+                    </twin:ProcessXmlDocument>
+                    </soapenv:Body>
+                    </soapenv:Envelope>`;
 
 
 
-    async AnnualReportMultiCurrency(args: IGeneralLedgerTransactionsArgs, config?: IGeneralLedger060Config): Promise<IGeneralLedgerTransactions> {
+        const r = await axios.post(`${this.parent.tokenInfo['twf.clusterUrl']}/webservices/processxml.asmx?wsdl`, body, CONFIG);
+
+        const parsed = await this.parent.utils.xml2js(r.data);
+
+        if (parsed.th && !Array.isArray(parsed.th)) {
+            parsed.th = [parsed.th];
+        }
+
+        if (parsed.th[0].td && !Array.isArray(parsed.th[0].td)) {
+            parsed.th.td = [parsed.th.td];
+        }
+
+        if (parsed.tr && !Array.isArray(parsed.tr)) {
+            parsed.tr = [parsed.tr];
+        }
+
+        if (parsed.tr)
+            for (let i = 0; i < parsed.tr.length; i++) {
+                if (parsed.tr[i].td && !Array.isArray(parsed.tr[i].td)) {
+                    parsed.tr[i].td = [parsed.tr[i].td];
+                }
+            }
+
+        return parsed;
+    }
+
+    async AnnualReportYTD(args: IAnnualReportYTDArgs, config?: IAnnualReportYTDConfig): Promise<IAnnualReportYTD> {
+        await this.parent.oAuth.validateAccessToken();
+
+        let body = `
+        <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:twin="http://www.twinfield.com/">
+        <soapenv:Header>
+            <twin:Header>
+                <twin:AccessToken>${this.parent.accessToken}</twin:AccessToken>
+                <twin:CompanyCode>${args.officeCode}</twin:CompanyCode>
+            </twin:Header>
+        </soapenv:Header>
+        <soapenv:Body>
+            <twin:ProcessXmlDocument>
+                <twin:xmlRequest>
+                <columns code="050_1">
+                `
+
+
+        body += `
+            <column id="1">
+                <field>fin.trs.head.office</field>
+                <label>Administratie</label>
+                <visible>${!config?.office ? 'false' : 'true'}</visible>
+                <ask>false</ask>
+                <operator>none</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+        body += `<column id="2">
+                <field>fin.trs.head.officename</field>
+                <label>Adm.naam</label>
+                 <visible>${!config?.officeName ? 'false' : 'true'}</visible>
+                <ask>false</ask>
+                <operator>none</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+        body += `<column id="3">
+                <field>fin.trs.head.yearperiod</field>
+                <label>Jaar/periode (JJJJ/PP)</label>
+                <visible>${!config?.yearperiod ? 'false' : 'true'}</visible>
+                <ask>true</ask>
+                <operator>between</operator>
+                <from>${args?.fromDate ? args?.fromDate : ''}</from>
+                <to>${args?.toDate ? args?.toDate : ''}</to>
+                <finderparam></finderparam>
+            </column>`
+
+
+        body += `<column id="4">
+                <field>fin.trs.head.status</field>
+                <label>Status</label>
+                 <visible>${!config?.status ? 'false' : 'true'}</visible>
+                <ask>true</ask>
+                <operator>equal</operator>
+                <from>normal</from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+
+        body += `<column id="5">
+                <field>fin.trs.line.dim1</field>
+                <label>Grootboekrek.</label>
+                 <visible>${!config?.dim1 ? 'false' : 'true'}</visible>
+                <ask>true</ask>
+                <operator>between</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+        body += `<column id="6">
+                <field>fin.trs.line.dim1name</field>
+                <label>Grootboekrek.naam</label>
+                 <visible>${!config?.dim1Name ? 'false' : 'true'}</visible>
+                <ask>false</ask>
+                <operator>none</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+
+        body += `<column id="7">
+                <field>fin.trs.line.dim1type</field>
+                <label>Dimensietype 1</label>
+                 <visible>${!config?.dim1Type ? 'false' : 'true'}</visible>
+                <ask>false</ask>
+                <operator>none</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+
+        body += `<column id="8">
+                <field>fin.trs.line.valuesigned</field>
+                <label>Bedrag</label>
+                 <visible>${!config?.valueSigned ? 'false' : 'true'}</visible>
+                <ask>false</ask>
+                <operator>none</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+
+        body += `<column id="9">
+                <field>fin.trs.line.basevaluesigned</field>
+                <label>Basisbedrag</label>
+                 <visible>${!config?.baseValueSigned ? 'false' : 'true'}</visible>
+                <ask>false</ask>
+                <operator>none</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+        body += `<column id="10">
+                <field>fin.trs.line.repvaluesigned</field>
+                <label>Rapportagebedrag</label>
+                 <visible>${!config?.repValueSigned ? 'false' : 'true'}</visible>
+                <ask>false</ask>
+                <operator>none</operator>
+                <from></from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+
+        body += `<column id="11">
+                <field>fin.trs.head.balanceregimeprompt</field>
+                <label>Regime</label>
+                <visible>${!config?.balanceRegimePrompt ? 'false' : 'true'}</visible>
+                <ask>true</ask>
+                <operator>equal</operator>
+                <from>fiscal</from>
+                <to></to>
+                <finderparam></finderparam>
+            </column>`
+
+
+        body += `   </columns>
+            </twin:xmlRequest>
+            </twin:ProcessXmlDocument>
+            </soapenv:Body>
+            </soapenv:Envelope>`;
+
+
+        const r = await axios.post(`${this.parent.tokenInfo['twf.clusterUrl']}/webservices/processxml.asmx?wsdl`, body, CONFIG);
+
+        const parsed = await this.parent.utils.xml2js(r.data);
+
+        if (parsed.th && !Array.isArray(parsed.th)) {
+            parsed.th = [parsed.th];
+        }
+
+        if (parsed.th[0].td && !Array.isArray(parsed.th[0].td)) {
+            parsed.th.td = [parsed.th.td];
+        }
+
+        if (parsed.tr && !Array.isArray(parsed.tr)) {
+            parsed.tr = [parsed.tr];
+        }
+
+        if (parsed.tr)
+            for (let i = 0; i < parsed.tr.length; i++) {
+                if (parsed.tr[i].td && !Array.isArray(parsed.tr[i].td)) {
+                    parsed.tr[i].td = [parsed.tr[i].td];
+                }
+            }
+
+        return parsed;
+
+
+
+    }
+
+    async AnnualReportMultiCurrency(args: IAnnualReportMultiCurrencyArgs, config?: IGeneralLedger060Config): Promise<IGeneralLedgerTransactions> {
         await this.parent.oAuth.validateAccessToken();
 
         let body = `
@@ -735,8 +1127,8 @@ export default class BrowseData {
                 <visible>true</visible>
                 <ask>true</ask>
                 <operator>between</operator>
-                <from>${args.fromLedger}</from>
-                <to>${args.toLedger}</to>
+                <from>${args.fromLedger ? args.fromLedger : ''}</from>
+                <to>${args.toLedger ? args.toLedger : ''}</to>
                 <finderparam></finderparam>
             </column>`
 
@@ -903,8 +1295,8 @@ export default class BrowseData {
                         <finderparam></finderparam>
                     </column>`
 
-        if (config?.balanceRegimePrompt)
-            body += `<column id="21">
+        // if (config?.balanceRegimePrompt)
+        body += `<column id="21">
                         <field>fin.trs.head.balanceregimeprompt</field>
                         <label>Regime</label>
                         <visible>false</visible>
@@ -978,7 +1370,11 @@ export default class BrowseData {
                         <finderparam></finderparam>
                     </column>`
 
-
+        body += `   </columns>
+                    </twin:xmlRequest>
+                    </twin:ProcessXmlDocument>
+                    </soapenv:Body>
+                    </soapenv:Envelope>`;
 
         const r = await axios.post(`${this.parent.tokenInfo['twf.clusterUrl']}/webservices/processxml.asmx?wsdl`, body, CONFIG);
 
