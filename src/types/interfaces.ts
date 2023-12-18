@@ -271,8 +271,8 @@ export interface IGeneralLedgerTransactions {
         total: number;
         xmlns: string;
     };
-    th?: [{ td: IGeneralLedgerTransaction[] }];
-    tr?: [{ td: IGeneralLedgerTransaction[] }];
+    th: [{ td: IGeneralLedgerTransaction[] }];
+    tr: [{ td: IGeneralLedgerTransaction[] }];
 }
 
 export interface IAnnualReportYTDRow {

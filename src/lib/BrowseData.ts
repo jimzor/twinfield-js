@@ -1080,8 +1080,8 @@ export default class BrowseData {
                         <visible>false</visible>
                         <ask>true</ask>
                         <operator>between</operator>
-                        <from>${args.fromDate}</from>
-                        <to>${args.toDate}</to>
+                        <from>${args.fromDate ? args.fromDate : ''}</from>
+                        <to>${args.toDate ? args.toDate : ''}</to>
                         <finderparam></finderparam>
                     </column>`
 
@@ -1398,6 +1398,15 @@ export default class BrowseData {
                     parsed.tr[i].td = [parsed.tr[i].td];
                 }
             }
+
+
+        if (!parsed.th) {
+            parsed.th = [];
+        }
+
+        if (!parsed.tr) {
+            parsed.tr = [];
+        }
 
         return parsed;
     }
